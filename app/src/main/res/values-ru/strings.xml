@@ -24,4 +24,5 @@
     <string name="app_sound">Звук</string>
     <string name="app_camera">Камера</string>
     <string name="no_app">%1$s: приложение не найдено</string>
+    <string name="tasks_empty">Нет запущенных приложений</string>
 </resources>

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,10 +126,16 @@ public class Tasks extends ListView {
         }
         if(keyCode == KeyEvent.KEYCODE_DPAD_CENTER)
         {
-            PACKAGE_NAME = getContext().getPackageName();
-  /*          Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setComponent(new ComponentName = PACKAGE_NAME);
-            launcher.startActivity(intent); */
+            // CT07: switch to the selected task.
+            int pos = getSelectedItemPosition();
+            if(pos >= 0 && pos < tasks.size()) {
+                try {
+                    activityManager.moveTaskToFront(tasks.get(pos).id, 0);
+                } catch (Exception e) {
+                    Log.w("Tasks", "moveTaskToFront: " + e);
+                }
+            }
+            return true;
         }
 
         return super.onKeyUp(keyCode, event);

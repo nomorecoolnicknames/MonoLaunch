@@ -24,4 +24,5 @@
     <string name="app_sound">Sound</string>
     <string name="app_camera">Camera</string>
     <string name="no_app">%1$s: no such application</string>
+    <string name="tasks_empty">No running applications</string>
 </resources>
