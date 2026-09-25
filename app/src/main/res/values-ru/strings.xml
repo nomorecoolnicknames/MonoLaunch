@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">MonoLaunch</string>
     <string name="title_activity_main">MainActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -12,9 +13,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="contacts">Контакты</string>
     <string name="files">Файлы</string>
-    <string name="unread">не прочтено</string>
-    <string name="missed">пропущено</string>
-    <string name="ram">мб доступно</string>
+    <string name="unread">непрочит.</string>
+    <string name="missed">пропущ.</string>
+    <string name="ram">МБ свободно</string>
 
     <!-- CT07: hotkey targets, shown in a toast when missing. -->
     <string name="app_dialer">Телефон</string>
