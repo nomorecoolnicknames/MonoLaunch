@@ -12,7 +12,6 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 
 public class DialerView extends LinearLayout {
     private TextView numberView;
@@ -39,7 +38,7 @@ public class DialerView extends LinearLayout {
     }
 
     @Override
-    protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
+    protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
 
         if(gainFocus)
