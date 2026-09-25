@@ -250,13 +250,15 @@ public class Launcher extends Activity {
         dialerView = new DialerView(getApplicationContext());
         tasks = new Tasks(this);
 
-        tasks.setFocusable(true);
-        dialerView.setFocusable(true);
+        // CT07: also focusable in touch mode (on after boot and after key mouse
+        // gestures): MENU, BACK and CALL do not leave it and were lost.
+        tasks.setFocusableInTouchMode(true);
+        dialerView.setFocusableInTouchMode(true);
 
         launcherView = new LauncherView(getApplicationContext());
         appList = new AppListView(this);
-        appList.setFocusable(true);
-        launcherView.setFocusable(true);
+        appList.setFocusableInTouchMode(true);
+        launcherView.setFocusableInTouchMode(true);
         launcherView.requestFocus();
 
         cachedBackground = getWindow().getDecorView().getBackground();
