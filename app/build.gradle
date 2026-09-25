@@ -9,7 +9,8 @@ android {
     defaultConfig {
         applicationId "com.monobogdan.monolaunch"
         minSdk 16
-        targetSdk 33
+        // CT07: 22, so the SMS and call log permissions are granted at install.
+        targetSdk 22
         versionCode 2
         versionName "1.03 a.i.v"
     }
@@ -26,6 +27,10 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    lint {
+        // CT07: targetSdk 22 is intentional.
+        disable 'ExpiredTargetSdkVersion'
     }
 }
 
