@@ -1,7 +1,6 @@
 package com.monobogdan.monolaunch;
 
 import android.app.Activity;
-import android.app.StatusBarManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -124,7 +123,7 @@ public class Launcher extends Activity {
             if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
             {
                 try {
-                    StatusBarManager barMan = (StatusBarManager) getContext().getSystemService("statusbar");
+                    Object barMan = getContext().getSystemService("statusbar");
                     barMan.getClass().getMethod("expandNotificationsPanel").invoke(barMan);
                 } catch (Exception e)
                 {
