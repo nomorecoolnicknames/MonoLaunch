@@ -76,9 +76,12 @@ public class Launcher extends Activity {
                 return true;
             }
 
+            // CT07: hotkeys go through AppIntents.
+            Context ctx = getContext();
+
             if(keyCode == KeyEvent.KEYCODE_CALL)
             {
-                startActivity(getContext().getPackageManager().getLaunchIntentForPackage("com.android.dialer"));
+                AppIntents.dialer(ctx);
 
                 return true;
             }
@@ -86,40 +89,36 @@ public class Launcher extends Activity {
 ///dial. copied from https://github.com/Barracuda72/minilaunch
             if(keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9)
             {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+(keyCode-KeyEvent.KEYCODE_0)));
-                startActivity(intent);
+                AppIntents.dial(ctx, String.valueOf(keyCode - KeyEvent.KEYCODE_0));
                 return true;
             }
             if(keyCode == KeyEvent.KEYCODE_POUND)
             {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:#"));
-                startActivity(intent);
+                AppIntents.dial(ctx, "#");
                 return true;
             }
             if(keyCode == KeyEvent.KEYCODE_STAR)
             {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:*"));
-                startActivity(intent);
+                AppIntents.dial(ctx, "*");
                 return true;
             }
             if(keyCode == KeyEvent.KEYCODE_BACK)
             {
-                startActivity(getContext().getPackageManager().getLaunchIntentForPackage("com.android.contacts"));
+                AppIntents.contacts(ctx);
                 return true;
             }
 
             if(keyCode == KeyEvent.KEYCODE_MENU)
             {
-                startActivity(getContext().getPackageManager().getLaunchIntentForPackage("com.sprd.fileexplorer"));
+                AppIntents.files(ctx);
                 return true;
             }
 
             if(keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
-                startActivity(getContext().getPackageManager().getLaunchIntentForPackage("com.android.mms"));
-
+            {
+                AppIntents.messages(ctx);
+                return true;
+            }
 
             if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
             {
@@ -135,17 +134,26 @@ public class Launcher extends Activity {
             }
 
             if(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT)
-                startActivity(getContext().getPackageManager().getLaunchIntentForPackage("com.android.calendar"));
-
+            {
+                AppIntents.calendar(ctx);
+                return true;
+            }
 
             if(keyCode == KeyEvent.KEYCODE_DPAD_UP)
             {
-                switchToTasks();
+                // CT07: sound settings instead of the task list, which is
+                // empty for a non-privileged app since Android 5.
+                AppIntents.sound(ctx);
 
                 return true;
             }
 
-
+            // CT07: short press of the camera key.
+            if(keyCode == KeyEvent.KEYCODE_CAMERA)
+            {
+                AppIntents.camera(ctx);
+                return true;
+            }
 
             return super.onKeyUp(keyCode, event);
         }

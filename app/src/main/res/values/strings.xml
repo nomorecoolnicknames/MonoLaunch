@@ -15,4 +15,13 @@
     <string name="unread">Unread SMS</string>
     <string name="missed">Missed calls</string>
     <string name="ram">MB available</string>
+
+    <!-- CT07: hotkey targets, shown in a toast when missing. -->
+    <string name="app_dialer">Phone</string>
+    <string name="app_contacts">Contacts</string>
+    <string name="app_messages">Messages</string>
+    <string name="app_calendar">Calendar</string>
+    <string name="app_sound">Sound</string>
+    <string name="app_camera">Camera</string>
+    <string name="no_app">%1$s: no such application</string>
 </resources>

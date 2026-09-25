@@ -15,4 +15,13 @@
     <string name="unread">не прочтено</string>
     <string name="missed">пропущено</string>
     <string name="ram">мб доступно</string>
+
+    <!-- CT07: hotkey targets, shown in a toast when missing. -->
+    <string name="app_dialer">Телефон</string>
+    <string name="app_contacts">Контакты</string>
+    <string name="app_messages">Сообщения</string>
+    <string name="app_calendar">Календарь</string>
+    <string name="app_sound">Звук</string>
+    <string name="app_camera">Камера</string>
+    <string name="no_app">%1$s: приложение не найдено</string>
 </resources>
