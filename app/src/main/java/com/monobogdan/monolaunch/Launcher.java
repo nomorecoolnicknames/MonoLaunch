@@ -260,7 +260,12 @@ public class Launcher extends Activity {
         launcherView.requestFocus();
 
         cachedBackground = getWindow().getDecorView().getBackground();
-        getWindow().setBackgroundDrawable(getWallpaper());
+        try {
+            getWindow().setBackgroundDrawable(getWallpaper());
+        } catch (Exception e) {
+            // CT07: keep the theme background.
+            Log.w("Launcher", "getWallpaper: " + e);
+        }
 
         switchToHome();
     }

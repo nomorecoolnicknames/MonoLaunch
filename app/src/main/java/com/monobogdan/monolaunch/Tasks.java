@@ -88,17 +88,21 @@ public class Tasks extends ListView {
 
         tasks.clear();
 
+        // CT07: topActivity can be null, and the icon is not always a BitmapDrawable.
         for (ActivityManager.RunningTaskInfo rt :
              tInfo) {
             try {
+                if(rt.topActivity == null)
+                    continue;
+
                 AppTask appInfo = new AppTask();
                 PackageInfo pacInfo = pacMan.getPackageInfo(rt.topActivity.getPackageName(), 0);
 
-                if(pacInfo.packageName.equals("com.monobogdan.monolaunch") || pacInfo.packageName.equals("com.sprd.simple.launcher"))
+                if(pacInfo.packageName.equals(getContext().getPackageName()) || pacInfo.packageName.equals("com.sprd.simple.launcher"))
                     continue;
 
                 appInfo.id = rt.id;
-                appInfo.icon = ((BitmapDrawable) pacInfo.applicationInfo.loadIcon(pacMan)).getBitmap();
+                appInfo.icon = AppListView.iconBitmap(pacInfo.applicationInfo.loadIcon(pacMan), 48);
                 appInfo.name = pacMan.getApplicationLabel(pacInfo.applicationInfo).toString();
 
                 tasks.add(appInfo);

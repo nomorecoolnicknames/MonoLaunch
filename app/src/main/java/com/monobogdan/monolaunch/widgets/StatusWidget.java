@@ -19,6 +19,7 @@ import android.os.PowerManager;
 import android.provider.CallLog;
 import android.provider.Telephony;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 
 import com.monobogdan.monolaunch.Launcher;
@@ -83,6 +84,7 @@ public class StatusWidget extends BroadcastReceiver {
         });
     }
 
+    // CT07: a null cursor or SecurityException gives a zero count; cursors are closed.
     private void updateSMSState()
     {
         String[] proj = new String[]
@@ -92,20 +94,32 @@ public class StatusWidget extends BroadcastReceiver {
                         Telephony.Sms.READ
                 };
 
-        Cursor cursor = context.getContentResolver().query(Uri.parse("content://sms/inbox"), proj,
-                "read = 0",  null, null);
-        smsCount = cursor.getCount();
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(Uri.parse("content://sms/inbox"), proj,
+                    "read = 0", null, null);
+            if (cursor == null) {
+                smsCount = 0;
+                smsSender = "";
+                return;
+            }
+            smsCount = cursor.getCount();
 
-        if(smsCount > 0) {
-            cursor.moveToFirst();
-            int addr = cursor.getColumnIndex("address");
+            if (smsCount > 0 && cursor.moveToFirst()) {
+                int addr = cursor.getColumnIndex("address");
 
-            if (addr != -1)
-                smsSender = cursor.getString(addr);
-        }
-        else
-        {
+                if (addr != -1)
+                    smsSender = cursor.getString(addr);
+            } else {
+                smsSender = "";
+            }
+        } catch (Exception e) {
+            Log.w("StatusWidget", "sms inbox: " + e);
+            smsCount = 0;
             smsSender = "";
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
     }
 
@@ -118,8 +132,20 @@ public class StatusWidget extends BroadcastReceiver {
                         CallLog.Calls.DATE
                 };
 
-        Cursor cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, proj, "is_read = 0", null, null);
-        dialCount = cursor.getCount();
+        Cursor cursor = null;
+        try {
+            // New missed calls, as the dialer counts them.
+            cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, proj,
+                    CallLog.Calls.TYPE + " = " + CallLog.Calls.MISSED_TYPE + " AND " + CallLog.Calls.NEW + " = 1",
+                    null, null);
+            dialCount = cursor == null ? 0 : cursor.getCount();
+        } catch (Exception e) {
+            Log.w("StatusWidget", "call log: " + e);
+            dialCount = 0;
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
     }
 
     @Override
