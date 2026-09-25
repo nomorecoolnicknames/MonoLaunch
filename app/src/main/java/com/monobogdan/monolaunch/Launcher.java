@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -267,6 +268,29 @@ public class Launcher extends Activity {
             Log.w("Launcher", "getWallpaper: " + e);
         }
 
+        applyEndKeyDefault();
+        switchToHome();
+    }
+
+    // CT07: the red key is ENDCALL. Default END_BUTTON_BEHAVIOR to home +
+    // sleep, unless the setting already exists.
+    private void applyEndKeyDefault()
+    {
+        // Settings.System.END_BUTTON_BEHAVIOR and its bit values are @hide.
+        final String key = "end_button_behavior";
+        final int homeThenSleep = 0x1 | 0x2; // END_BUTTON_BEHAVIOR_HOME | END_BUTTON_BEHAVIOR_SLEEP
+        try {
+            if(Settings.System.getString(getContentResolver(), key) == null)
+                Settings.System.putInt(getContentResolver(), key, homeThenSleep);
+        } catch (Exception e) {
+            Log.w("Launcher", "END_BUTTON_BEHAVIOR default: " + e);
+        }
+    }
+
+    // CT07: HOME while running (red key) returns to the clock screen.
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         switchToHome();
     }
 
