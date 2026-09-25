@@ -264,4 +264,10 @@ public class Launcher extends Activity {
 
         switchToHome();
     }
+
+    @Override
+    protected void onDestroy() {
+        appList.release();
+        super.onDestroy();
+    }
 }
