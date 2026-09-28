@@ -1,14 +1,18 @@
 package com.monobogdan.monolaunch;
 
 import android.app.Activity;
+import android.app.WallpaperManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -262,15 +266,55 @@ public class Launcher extends Activity {
         launcherView.requestFocus();
 
         cachedBackground = getWindow().getDecorView().getBackground();
+        applyWallpaper(true);
+        registerReceiver(wallpaperReceiver, new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED));
+
+        applyEndKeyDefault();
+        switchToHome();
+    }
+
+    // CT07: the home activity lives as long as the phone is on, so the wallpaper
+    // read in onCreate went stale when the user picked a new one. Reload it on
+    // ACTION_WALLPAPER_CHANGED, and in onResume if the wallpaper id moved
+    // (a broadcast missed while stopped). The old drawable is only dropped,
+    // WallpaperManager owns the bitmap.
+    private int wallpaperId = -1;
+
+    private final BroadcastReceiver wallpaperReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            applyWallpaper(true);
+        }
+    };
+
+    private void applyWallpaper(boolean force)
+    {
+        int id = -1;
+        if(Build.VERSION.SDK_INT >= 24) {
+            try {
+                id = WallpaperManager.getInstance(this).getWallpaperId(WallpaperManager.FLAG_SYSTEM);
+            } catch (Exception e) {
+                Log.w("Launcher", "getWallpaperId: " + e);
+            }
+            if(!force && id == wallpaperId)
+                return;
+        } else if(!force) {
+            return;
+        }
+
         try {
             getWindow().setBackgroundDrawable(getWallpaper());
+            wallpaperId = id;
         } catch (Exception e) {
             // CT07: keep the theme background.
             Log.w("Launcher", "getWallpaper: " + e);
         }
+    }
 
-        applyEndKeyDefault();
-        switchToHome();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyWallpaper(false);
     }
 
     // CT07: the red key is ENDCALL. Default END_BUTTON_BEHAVIOR to home +
@@ -297,6 +341,7 @@ public class Launcher extends Activity {
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(wallpaperReceiver);
         appList.release();
         super.onDestroy();
     }
