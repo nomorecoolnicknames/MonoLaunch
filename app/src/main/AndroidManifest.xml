@@ -18,6 +18,9 @@
     <uses-permission android:name="android.permission.REORDER_TASKS"/>
     <!-- CT07: END_BUTTON_BEHAVIOR default, see Launcher. -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!-- CT07: the current wallpaper; since Android 8.1 an app without it
+         gets the default one. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
